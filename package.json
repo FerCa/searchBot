@@ -1,0 +1,25 @@
+{
+  "name": "searchBot",
+  "version": "0.0.0",
+  "description": "A bot to follow searches for new items",
+  "main": "searchbot.js",
+  "dependencies": {
+    "cheerio": "^0.19.0",
+    "iconv-lite": "^0.4.7",
+    "nodemailer": "^1.3.2",
+    "request": "^2.55.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FerCa/searchBot.git"
+  },
+  "author": "FerCa",
+  "bugs": {
+    "url": "https://github.com/FerCa/searchBot/issues"
+  },
+  "homepage": "https://github.com/FerCa/searchBot"
+}
