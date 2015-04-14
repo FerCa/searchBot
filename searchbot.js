@@ -2,6 +2,7 @@ var request = require('request');
 var cheerio = require('cheerio');
 var nodemailer = require('nodemailer');
 var iconv = require('iconv-lite');
+var Ad = require('./lib/ad');
 
 request('http://www.milanuncios.com/instrumentos-musicales/guitarra-zurdo.htm?desde=400&hasta=2500&dias=1', function (error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -35,18 +36,13 @@ request('http://www.milanuncios.com/instrumentos-musicales/guitarra-zurdo.htm?de
             console.log('-------------------------------------------------------------------------------------');
             console.log('-------------------------------------------------------------------------------------');
 
-            var html = '<b>' + title + '</b>' + '<br>' +
-                link + '<br>' +
-                text + '<br>' +
-                '<b>Price: ' + price + '</b><br>' +
-                '<img src="' + image + '">' + '<br>';
+            var ad = new Ad(title, text, price, link, image);
 
             var mailOptions = {
                 from: 'SearchBot <search@fercaiscoding.com>',
                 to: 'ferca23@gmail.com',
                 subject: 'New add in milanuncios',
-                //text: 'Hello world ✔',
-                html: html
+                html: ad.getAsHTML()
             };
 
             transporter.sendMail(mailOptions, function(error, info){
