@@ -33,6 +33,15 @@ suite('Milanuncios', function() {
             sinon.assert.calledWithExactly(log2OutErrorStub, 'Error requesting: ' + milanunciosSearchUrl);
         });
 
+        test('If http error returned when requesting url should print error to the console', function() {
+            var fakeResponse = {
+                statusCode: 500
+            };
+            requestStub.callsArgWith(1, undefined, fakeResponse);
+            exerciceGetAds();
+            sinon.assert.calledWithExactly(log2OutErrorStub, 'Error requesting: ' + milanunciosSearchUrl);
+        });
+
     });
 
 });
