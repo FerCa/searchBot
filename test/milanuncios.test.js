@@ -21,8 +21,8 @@ suite('Milanuncios', function() {
 
     suite('getAds', function() {
 
-        function exerciceGetAds() {
-            sut.getAds();
+        function exerciceGetAds(callback) {
+            sut.getAds(callback);
         }
 
         function createFakeResponseWithStatusCode(statusCode) {
@@ -53,8 +53,18 @@ suite('Milanuncios', function() {
             var fakeResponse = createFakeResponseWithStatusCode(200);
             var body = 'testHtmlBody';
             requestStub.callsArgWith(1, undefined, fakeResponse, body);
-            exerciceGetAds();
+            exerciceGetAds(function(){});
             sinon.assert.calledWithExactly(milanunciosScraperExtractAdsStub, body);
+        });
+
+        test('If http response is 200 should call provided callback with the result of milanunciosScrapper.extractAds', function() {
+            var fakeResponse = createFakeResponseWithStatusCode(200);
+            requestStub.callsArgWith(1, undefined, fakeResponse, 'body');
+            var expectedAds = 'arrayOfAds';
+            milanunciosScraperExtractAdsStub.returns(expectedAds);
+            var callbackSpy = sinon.spy();
+            exerciceGetAds(callbackSpy);
+            callbackSpy.calledWithExactly(expectedAds);
         });
 
     });
