@@ -9,6 +9,10 @@ var settings = {
         },
         from: 'SearchBot <search@fercaiscoding.com>',
         to: 'ferca23@gmail.com'
+    },
+    mongo: {
+        server: 'localhost'
+
     }
 
 };
