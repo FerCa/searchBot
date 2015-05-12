@@ -7,11 +7,12 @@ var log2out = require('log2out');
 
 suite('SeenAds', function() {
     var sut;
-    var ad, title, price, link, error, callbackSpy;
+    var ad, title, price, link, error, callbackSpy, settings;
     var adModelFindOneStub, adModelCreateStub;
     var log2OutErrorStub;
 
     setup(function() {
+        settings = {};
         title = 'awesome guitar';
         price = '600';
         link = 'http://adds.com/aewsomeguitar';
@@ -25,7 +26,7 @@ suite('SeenAds', function() {
         var logger = log2out.getLogger('SeenAds');
         log2OutErrorStub = sinon.stub(logger, 'error');
 
-        sut = new SeenAds(adModel, logger);
+        sut = new SeenAds(settings, adModel, logger);
     });
 
     teardown(function() {
@@ -35,38 +36,42 @@ suite('SeenAds', function() {
 
     suite('alreadySeen', function() {
 
-        test('Should call AdModel findOne with provided ad', function() {
+        function exerciceAlreadySeen() {
             sut.alreadySeen(ad, callbackSpy);
+        }
+
+        test('Should call AdModel findOne with provided ad', function() {
+            exerciceAlreadySeen();
             var expectedQuery = {title: title, price: price, link: link};
             sinon.assert.calledWithExactly(adModelFindOneStub, expectedQuery, sinon.match.func);
         });
 
         test('Should call provided callback with false if ad is not in DB', function() {
-            sut.alreadySeen(ad, callbackSpy);
+            exerciceAlreadySeen();
             adModelFindOneStub.callArgWith(1, null, null);
             sinon.assert.calledWithExactly(callbackSpy, false);
         });
 
         test('Should call AdModel create with ad if it is not in DB', function() {
-            sut.alreadySeen(ad, callbackSpy);
+            exerciceAlreadySeen();
             adModelFindOneStub.callArgWith(1, null, null);
             sinon.assert.calledWithExactly(adModelCreateStub, ad, sinon.match.func);
         });
 
         test('Should call provided callback with true if ad is already in the DB', function() {
-            sut.alreadySeen(ad, callbackSpy);
+            exerciceAlreadySeen();
             adModelFindOneStub.callArgWith(1, null, ad);
             sinon.assert.calledWithExactly(callbackSpy, true)
         });
 
         test('Should log error to stdout if error finding ad', function() {
-            sut.alreadySeen(ad, callbackSpy);
+            exerciceAlreadySeen();
             adModelFindOneStub.callArgWith(1, error, null);
             sinon.assert.calledWithExactly(log2OutErrorStub, 'Error finding ad in DB: ' + error);
         });
 
         test('Should log error to stdout if error saving ad', function() {
-            sut.alreadySeen(ad, callbackSpy);
+            exerciceAlreadySeen();
             adModelFindOneStub.callArgWith(1, null, null);
             adModelCreateStub.callArgWith(1, error);
             sinon.assert.calledWithExactly(log2OutErrorStub, 'Error saving ad in DB: ' + error);
