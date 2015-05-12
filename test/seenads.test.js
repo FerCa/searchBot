@@ -19,6 +19,10 @@ suite('SeenAds', function() {
         sut = new SeenAds(adModel);
     });
 
+    teardown(function() {
+        adModelFindOneStub.restore();
+    });
+
     suite('alreadySeen', function() {
 
         test('Should call AdModel findOne with provided ad', function() {
@@ -26,11 +30,12 @@ suite('SeenAds', function() {
             sinon.assert.calledWithExactly(adModelFindOneStub, ad, sinon.match.func);
         });
 
-        //test('Should call provided callback with false if ad is not in DB', function() {
-        //
-        //    sut.alreadySeen();
-        //
-        //});
+        test('Should call provided callback with false if ad is not in DB', function() {
+            var callback = sinon.spy();
+            sut.alreadySeen(ad, callback);
+            adModelFindOneStub.callArgOnWith(1, null, null);
+            sinon.assert.calledWithExactly(callback, false)
+        });
 
     });
 
