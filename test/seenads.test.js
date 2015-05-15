@@ -3,12 +3,13 @@ var assert = require('chai').assert;
 var SeenAds = require('../lib/SeenAds');
 var adModel = require('../lib/mongoose/admodel');
 var log2out = require('log2out');
+var mongoose = require('mongoose');
 
 
 suite('SeenAds', function() {
     var sut;
     var ad, title, price, link, error, callbackSpy, settings;
-    var adModelFindOneStub, adModelCreateStub;
+    var adModelFindOneStub, adModelCreateStub, mongooseConnectStub;
     var log2OutErrorStub;
 
     setup(function() {
@@ -22,16 +23,18 @@ suite('SeenAds', function() {
 
         adModelFindOneStub = sinon.stub(adModel, 'findOne');
         adModelCreateStub = sinon.stub(adModel, 'create');
+        mongooseConnectStub = sinon.stub(mongoose, 'connect');
 
         var logger = log2out.getLogger('SeenAds');
         log2OutErrorStub = sinon.stub(logger, 'error');
 
-        sut = new SeenAds(settings, adModel, logger);
+        sut = new SeenAds(settings, adModel, logger, mongoose);
     });
 
     teardown(function() {
         adModelFindOneStub.restore();
         adModelCreateStub.restore();
+        mongooseConnectStub.restore();
     });
 
     suite('alreadySeen', function() {
@@ -39,6 +42,17 @@ suite('SeenAds', function() {
         function exerciceAlreadySeen() {
             sut.alreadySeen(ad, callbackSpy);
         }
+
+        test('Should call mongoose connect the first time is called', function() {
+            exerciceAlreadySeen();
+            sinon.assert.called(mongooseConnectStub);
+        });
+
+        test('Should not call mongoose connect the second time is called', function() {
+            exerciceAlreadySeen();
+            exerciceAlreadySeen();
+            sinon.assert.callCount(mongooseConnectStub, 1);
+        });
 
         test('Should call AdModel findOne with provided ad', function() {
             exerciceAlreadySeen();

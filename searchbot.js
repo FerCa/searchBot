@@ -6,7 +6,6 @@ var SeenAds = require('./lib/seenads');
 
 var milanuncios = new Milanuncios();
 var seenAds = new SeenAds(settings.mongo);
-seenAds.connect();
 
 milanuncios.getAds(function (ads) {
 
