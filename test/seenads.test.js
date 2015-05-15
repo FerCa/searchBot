@@ -28,7 +28,7 @@ suite('SeenAds', function() {
         var logger = log2out.getLogger('SeenAds');
         log2OutErrorStub = sinon.stub(logger, 'error');
 
-        sut = new SeenAds(settings, adModel, logger, mongoose);
+        sut = new SeenAds(settings, adModel, logger);
     });
 
     teardown(function() {
