@@ -11,7 +11,8 @@ var settings = {
         to: 'ferca23@gmail.com'
     },
     mongo: {
-        server: 'localhost'
+        server: 'localhost',
+        connectionTimeout: 60000 // 1 minute
 
     }
 
