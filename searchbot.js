@@ -14,9 +14,9 @@ webpage.getAds(function (ads) {
 
     for(var i = 0; i < ads.length; i++) {
         var ad = ads[i];
-        seenAds.alreadySeen(ad, function(seen) {
+        seenAds.alreadySeen(ad, function(seen, providedAd) {
             if(!seen) {
-                mailer.send('New add', ad.getAsHTML());
+                mailer.send('New add', providedAd.getAsHTML());
             }
         });
     }
