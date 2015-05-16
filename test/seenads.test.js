@@ -63,7 +63,7 @@ suite('SeenAds', function() {
         test('Should call provided callback with false if ad is not in DB', function() {
             exerciceAlreadySeen();
             adModelFindOneStub.callArgWith(1, null, null);
-            sinon.assert.calledWithExactly(callbackSpy, false);
+            sinon.assert.calledWithExactly(callbackSpy, false, ad);
         });
 
         test('Should call AdModel create with ad if it is not in DB', function() {
@@ -75,7 +75,7 @@ suite('SeenAds', function() {
         test('Should call provided callback with true if ad is already in the DB', function() {
             exerciceAlreadySeen();
             adModelFindOneStub.callArgWith(1, null, ad);
-            sinon.assert.calledWithExactly(callbackSpy, true)
+            sinon.assert.calledWithExactly(callbackSpy, true, ad)
         });
 
         test('Should log error to stdout if error finding ad', function() {
