@@ -1,13 +1,14 @@
 var Mailer = require('./lib/mailer');
 var settings = require('./settings');
-var Milanuncios = require('./lib/milanuncios');
+var Webpage = require('./lib/webpage');
 var SeenAds = require('./lib/seenads');
+var MilanunciosScraper = require('./lib/milanunciosscraper');
 
 
-var milanuncios = new Milanuncios();
+var webpage = new Webpage('http://www.milanuncios.com/instrumentos-musicales/guitarra-zurdo.htm?desde=400&hasta=2500&dias=1', new MilanunciosScraper());
 var seenAds = new SeenAds(settings.mongo);
 
-milanuncios.getAds(function (ads) {
+webpage.getAds(function (ads) {
 
     var mailer = new Mailer(settings);
 
@@ -15,7 +16,7 @@ milanuncios.getAds(function (ads) {
         var ad = ads[i];
         seenAds.alreadySeen(ad, function(seen) {
             if(!seen) {
-                mailer.send('New add in milanuncios', ad.getAsHTML());
+                mailer.send('New add', ad.getAsHTML());
             }
         });
     }
