@@ -16,7 +16,7 @@
     "sinon": "^1.14.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./test --ui tdd"
   },
   "repository": {
     "type": "git",
