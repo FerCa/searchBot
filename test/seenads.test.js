@@ -1,6 +1,6 @@
 var sinon = require('sinon');
 var assert = require('chai').assert;
-var SeenAds = require('../lib/SeenAds');
+var SeenAds = require('../lib/seenads');
 var adModel = require('../lib/mongoose/admodel');
 var log2out = require('log2out');
 var mongoose = require('mongoose');
