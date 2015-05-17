@@ -9,7 +9,7 @@ suite('MilanunciosWebpage', function() {
     setup(function() {
         var webpage = new Webpage();
         webPageGetAdsStub = sinon.stub(webpage, 'getAds');
-        sut = new MilanunciosWebpage(webpage);
+        sut = new MilanunciosWebpage('searchurl', webpage);
     });
 
     suite('getAds', function() {
