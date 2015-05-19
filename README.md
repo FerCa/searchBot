@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/FerCa/searchBot.svg?branch=master)](https://travis-ci.org/FerCa/searchBot)
 # searchBot
 
 searchBot is a command line tool to save searches to e-comerce, online thrift shops or any other webpage providing 
