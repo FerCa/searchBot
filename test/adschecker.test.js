@@ -9,6 +9,7 @@ var Ad = require('../lib/ad');
 suite('AdsChecker', function() {
     var sut, seenAdsAlreadySeenStub, mailerSendStub;
     var ads, ad0, ad1, ad2, ad3;
+    var name;
 
     setup(function() {
         ad0 = new Ad('title0');
@@ -20,7 +21,8 @@ suite('AdsChecker', function() {
         seenAdsAlreadySeenStub = sinon.stub(seenAds, 'alreadySeen');
         var mailer = new Mailer({mail: {nodeMailer: 'fake'}});
         mailerSendStub = sinon.stub(mailer, 'send');
-        sut = new AdsChecker(seenAds, mailer);
+        name = 'a name';
+        sut = new AdsChecker(name, seenAds, mailer);
     });
 
     suite('checkAndNotify', function() {
@@ -36,8 +38,8 @@ suite('AdsChecker', function() {
             seenAdsAlreadySeenStub.onCall(3).callsArgWith(1, false, ad3);
             exerciceCheckAndNotify(ads);
             sinon.assert.callOrder(
-                mailerSendStub.withArgs('New add', ad0.getAsHTML()),
-                mailerSendStub.withArgs('New add', ad3.getAsHTML())
+                mailerSendStub.withArgs('New add for ' + name, ad0.getAsHTML()),
+                mailerSendStub.withArgs('New add for ' + name, ad3.getAsHTML())
             );
             assert(mailerSendStub.calledTwice);
         });

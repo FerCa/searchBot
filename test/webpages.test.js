@@ -11,7 +11,7 @@ suite('Webpages', function() {
     setup(function() {
         var adsChecker = new AdsChecker();
         adsCheckerCheckAndNotifyStub = sinon.stub(adsChecker, 'checkAndNotify');
-        sut = new Webpages(adsChecker);
+        sut = new Webpages('a name', adsChecker);
     });
 
     suite('process', function() {
