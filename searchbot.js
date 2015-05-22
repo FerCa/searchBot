@@ -1,7 +1,4 @@
 var settings = require('./settings');
-var MilanunciosWebpage = require('./lib/milanuncioswebpage');
-var WallapopWebpage = require('./lib/wallapopwebpage');
-var AdsChecker = require('./lib/adschecker');
 var Webpages = require('./lib/webpages');
 
 var webpages = new Webpages();
