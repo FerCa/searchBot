@@ -61,4 +61,21 @@ suite('AdsChecker', function() {
 
     });
 
+    suite('add', function() {
+
+        function exerciceAdd(ads) {
+            sut.add(ads);
+        }
+
+        test('add every not seen ad to the notSeenAds array', function() {
+            seenAdsAlreadySeenStub.onCall(0).callsArgWith(1, false, ad0);
+            seenAdsAlreadySeenStub.onCall(1).callsArgWith(1, true, ad1);
+            seenAdsAlreadySeenStub.onCall(2).callsArgWith(1, true, ad2);
+            seenAdsAlreadySeenStub.onCall(3).callsArgWith(1, false, ad3);
+            exerciceAdd(ads);
+            assert.deepEqual(sut.notSeenAds, [ad0, ad3]);
+        });
+
+    });
+
 });
