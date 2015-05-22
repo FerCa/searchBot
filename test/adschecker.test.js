@@ -46,4 +46,19 @@ suite('AdsChecker', function() {
 
     });
 
+    suite('notify', function() {
+
+        function exerciceNotify() {
+            sut.notify();
+        }
+
+        test('call mailer send with all not seen add', function() {
+            sut.notSeenAds = [ad0, ad2, ad3];
+            exerciceNotify();
+            assert(mailerSendStub.calledWithExactly('New add for ' + name, ad0.getAsHTML() + ad2.getAsHTML() + ad3.getAsHTML()));
+
+        });
+
+    });
+
 });
