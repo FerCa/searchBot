@@ -1,7 +1,7 @@
 var sinon = require('sinon');
 var assert = require('chai').assert;
 var Webpage = require('../lib/webpage');
-var MilanunciosWebpage = require('../lib/milanuncioswebpage');
+var MilanunciosWebpage = require('../lib/webpages/milanuncios/milanuncioswebpage');
 
 suite('MilanunciosWebpage', function() {
     var sut, webPage, webPageGetAdsStub;

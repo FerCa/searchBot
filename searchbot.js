@@ -9,7 +9,7 @@ for(var i = 0; i < searches.length; i++) {
     for(var j = 0; j < search.where.length; j++) {
 
         var where = search.where[j];
-        var Webpage = require('./lib/' + where.page + 'webpage.js');
+        var Webpage = require('./lib/webpages/' + where.page + '/' + where.page + 'webpage.js');
         webpages.add(new Webpage(where.searchUrl));
     }
 

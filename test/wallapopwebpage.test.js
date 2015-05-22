@@ -1,7 +1,7 @@
 var sinon = require('sinon');
 var assert = require('chai').assert;
 var Webpage = require('../lib/webpage');
-var WallapopWebpage = require('../lib/wallapopwebpage');
+var WallapopWebpage = require('../lib/webpages/wallapop/wallapopwebpage');
 
 suite('WallapopWebpage', function() {
     var sut, webPage, webPageGetAdsStub;

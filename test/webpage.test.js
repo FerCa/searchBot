@@ -2,7 +2,7 @@ var sinon = require('sinon');
 var assert = require('chai').assert;
 var Webpage = require('../lib/webpage');
 var log2out = require('log2out');
-var MilanunciosScraper = require('../lib/milanunciosscraper');
+var MilanunciosScraper = require('../lib/webpages/milanuncios/milanunciosscraper');
 
 suite('Webpage', function() {
     var sut, requestStub, log2OutErrorStub, scraperExtractAdsStub;
