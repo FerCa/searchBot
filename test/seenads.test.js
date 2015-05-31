@@ -50,6 +50,7 @@ suite('SeenAds', function() {
 
         test('Should not call mongoose connect the second time is called', function() {
             exerciceAlreadySeen();
+            mongoose.connection.readyState = 1;
             exerciceAlreadySeen();
             sinon.assert.callCount(mongooseConnectStub, 1);
         });
