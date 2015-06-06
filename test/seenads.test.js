@@ -37,6 +37,41 @@ suite('SeenAds', function() {
         mongooseConnectStub.restore();
     });
 
+    suite('alreadySeenPromises', function() {
+
+        setup(function() {
+            // changing nextTick behaviour to make the promise syncronous
+            sinon.stub(process, 'nextTick').yields();
+        });
+
+        teardown(function() {
+            process.nextTick.restore();
+        });
+
+        function exerciceAlreadySeen() {
+            return sut.alreadySeen(ad);
+        }
+
+        test('Should resolve promise with false if ad is not in DB', function() {
+            var resolvedSpy = sinon.spy();
+            exerciceAlreadySeen().then(resolvedSpy, function(error) {});
+            adModelFindOneStub.callArgWith(1, null, null);
+
+            var expected = {seen: false, ad: ad};
+            sinon.assert.calledWithExactly(resolvedSpy, expected);
+        });
+
+        test('Should resolve promise with true if ad is already in the DB', function() {
+            var resolvedSpy = sinon.spy();
+            exerciceAlreadySeen().then(resolvedSpy, function(error) {});
+            adModelFindOneStub.callArgWith(1, null, ad);
+
+            var expected = {seen: true, ad: ad};
+            sinon.assert.calledWithExactly(resolvedSpy, expected);
+        });
+
+    });
+
     suite('alreadySeen', function() {
 
         function exerciceAlreadySeen() {
@@ -61,22 +96,10 @@ suite('SeenAds', function() {
             sinon.assert.calledWithExactly(adModelFindOneStub, expectedQuery, sinon.match.func);
         });
 
-        test('Should call provided callback with false if ad is not in DB', function() {
-            exerciceAlreadySeen();
-            adModelFindOneStub.callArgWith(1, null, null);
-            sinon.assert.calledWithExactly(callbackSpy, false, ad);
-        });
-
         test('Should call AdModel create with ad if it is not in DB', function() {
             exerciceAlreadySeen();
             adModelFindOneStub.callArgWith(1, null, null);
             sinon.assert.calledWithExactly(adModelCreateStub, ad, sinon.match.func);
-        });
-
-        test('Should call provided callback with true if ad is already in the DB', function() {
-            exerciceAlreadySeen();
-            adModelFindOneStub.callArgWith(1, null, ad);
-            sinon.assert.calledWithExactly(callbackSpy, true, ad)
         });
 
         test('Should log error to stdout if error finding ad', function() {

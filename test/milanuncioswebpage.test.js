@@ -14,14 +14,30 @@ suite('MilanunciosWebpage', function() {
 
     suite('getAds', function() {
 
-        function exerciceGetAds(callback) {
-            sut.getAds(callback);
+        setup(function() {
+            // changing nextTick behaviour to make the promise syncronous
+            sinon.stub(process, 'nextTick').yields();
+        });
+
+        teardown(function() {
+            process.nextTick.restore();
+        });
+
+        function exerciceGetAds() {
+            return sut.getAds();
         }
 
-        test('Should call webPage getAds with provided callback', function() {
-            var callback = function(){};
-            exerciceGetAds(callback);
-            assert(webPageGetAdsStub.calledWithExactly(callback));
+        test('Should call webPage.getAds', function() {
+            exerciceGetAds();
+            assert(webPageGetAdsStub.called);
+        });
+
+        test('when webPage.getAds calls provided callback should resolve the promise', function() {
+            var ads = 'ads';
+            webPageGetAdsStub.callsArgWith(0, ads);
+            var resolvedSpy = sinon.spy();
+            exerciceGetAds().then(resolvedSpy);
+            sinon.assert.calledWithExactly(resolvedSpy, ads);
         });
 
     });

@@ -1,13 +1,13 @@
 var sinon = require('sinon');
 var assert = require('chai').assert;
-var AdsNotifier = require('../lib/adschecker');
 var Mailer = require('../lib/mailer');
 var SeenAds = require('../lib/seenads');
 var Ad = require('../lib/ad');
+var Q = require('Q');
 
 
 suite('AdsChecker', function() {
-    var sut, seenAdsAlreadySeenStub, mailerSendStub;
+    var sut, seenAdsAlreadySeenStub, mailerSendStub, QAllStub;
     var ads, ad0, ad1, ad2, ad3;
     var name;
 
@@ -22,28 +22,12 @@ suite('AdsChecker', function() {
         var mailer = new Mailer({mail: {nodeMailer: 'fake'}});
         mailerSendStub = sinon.stub(mailer, 'send');
         name = 'a name';
-        sut = new AdsChecker(name, seenAds, mailer);
+        QAllStub = sinon.stub(Q, 'all').returns({then: function() {}});
+        sut = new AdsChecker(name, seenAds, mailer, Q);
     });
 
-    suite('checkAndNotify', function() {
-
-        function exerciceCheckAndNotify(ads) {
-            sut.checkAndNotify(ads);
-        }
-
-        test('call mailer send for every not seen add', function() {
-            seenAdsAlreadySeenStub.onCall(0).callsArgWith(1, false, ad0);
-            seenAdsAlreadySeenStub.onCall(1).callsArgWith(1, true, ad1);
-            seenAdsAlreadySeenStub.onCall(2).callsArgWith(1, true, ad2);
-            seenAdsAlreadySeenStub.onCall(3).callsArgWith(1, false, ad3);
-            exerciceCheckAndNotify(ads);
-            sinon.assert.callOrder(
-                mailerSendStub.withArgs('New add for ' + name, ad0.getAsHTML()),
-                mailerSendStub.withArgs('New add for ' + name, ad3.getAsHTML())
-            );
-            assert(mailerSendStub.calledTwice);
-        });
-
+    teardown(function() {
+       QAllStub.restore();
     });
 
     suite('notify', function() {
@@ -52,16 +36,42 @@ suite('AdsChecker', function() {
             sut.notify();
         }
 
-        test('call mailer send with all not seen add', function() {
-            sut.notSeenAds = [ad0, ad2, ad3];
+        test('call Q.All with promises', function() {
+
+            sut.promises.push('promise1');
+            sut.promises.push('promise2');
             exerciceNotify();
-            assert(mailerSendStub.calledWithExactly('New add for ' + name, ad0.getAsHTML() + ad2.getAsHTML() + ad3.getAsHTML()));
+            sinon.assert.calledWithExactly(QAllStub, sut.promises);
         });
 
-        test('empty the notSeenAds array', function() {
-            sut.notSeenAds = [ad0, ad2, ad3];
-            exerciceNotify();
-            assert.deepEqual([], sut.notSeenAds);
+        suite('Q.All resolves', function() {
+
+            setup(function() {
+                var result = [
+                    {seen: false, ad: ad0},
+                    {seen: true, ad: ad1},
+                    {seen: false, ad: ad2},
+                    {seen: false, ad: ad3}
+                ];
+                var thenStub = {
+                    then: function(callback) {
+                        callback(result);
+                    }
+                };
+                QAllStub.returns(thenStub);
+            });
+
+            test('call mailer send with all not seen add', function() {
+                exerciceNotify();
+                sinon.assert.calledWithExactly(mailerSendStub, 'New adds for ' + name, ad0.getAsHTML() + ad2.getAsHTML() + ad3.getAsHTML());
+            });
+
+            test('empty the promises array', function() {
+                sut.promises = ['promise1', 'promise2', 'promise3'];
+                exerciceNotify();
+                assert.deepEqual([], sut.promises);
+            });
+
         });
 
     });
@@ -72,13 +82,23 @@ suite('AdsChecker', function() {
             sut.add(ads);
         }
 
-        test('add every not seen ad to the notSeenAds array', function() {
-            seenAdsAlreadySeenStub.onCall(0).callsArgWith(1, false, ad0);
-            seenAdsAlreadySeenStub.onCall(1).callsArgWith(1, true, ad1);
-            seenAdsAlreadySeenStub.onCall(2).callsArgWith(1, true, ad2);
-            seenAdsAlreadySeenStub.onCall(3).callsArgWith(1, false, ad3);
+        function createFakePromiseWithParam(param) {
+            return fakePromise = {
+                then: function(callback) {callback(param)}
+            };
+        }
+
+        test('add every promise to the promises array', function() {
+            var ad0FakePromise = createFakePromiseWithParam({seen: false, ad: ad0});
+            var ad1FakePromise = createFakePromiseWithParam({seen: true, ad: ad1});
+            var ad2FakePromise = createFakePromiseWithParam({seen: true, ad: ad2});
+            var ad3FakePromise = createFakePromiseWithParam({seen: false, ad: ad3});
+            seenAdsAlreadySeenStub.onCall(0).returns(ad0FakePromise);
+            seenAdsAlreadySeenStub.onCall(1).returns(ad1FakePromise);
+            seenAdsAlreadySeenStub.onCall(2).returns(ad2FakePromise);
+            seenAdsAlreadySeenStub.onCall(3).returns(ad3FakePromise);
             exerciceAdd(ads);
-            assert.deepEqual(sut.notSeenAds, [ad0, ad3]);
+            assert.deepEqual(sut.promises, [ad0FakePromise, ad1FakePromise, ad2FakePromise, ad3FakePromise]);
         });
 
     });
