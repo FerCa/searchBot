@@ -3,7 +3,7 @@ var assert = require('chai').assert;
 var Webpages = require('../lib/webpages');
 var AdsChecker = require('../lib/adschecker');
 var Webpage = require('../lib/webpage');
-var Q = require('Q');
+var Q = require('q');
 
 
 suite('Webpages', function() {

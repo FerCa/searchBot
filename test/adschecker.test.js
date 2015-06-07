@@ -3,7 +3,7 @@ var assert = require('chai').assert;
 var Mailer = require('../lib/mailer');
 var SeenAds = require('../lib/seenads');
 var Ad = require('../lib/ad');
-var Q = require('Q');
+var Q = require('q');
 
 
 suite('AdsChecker', function() {
