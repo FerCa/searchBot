@@ -32,7 +32,7 @@ for(var i = 0; i < searches.length; i++) {
 
     webpages.process(function(newAdsHtml) {
         //@TODO: Create a abstract notifier instead of using mailer.send
-        mailer.send('New adds for ' + search.name, newAdsHtml);
+        mailer.send(search.notifyTo, 'New adds for ' + search.name, newAdsHtml);
     });
 }
 

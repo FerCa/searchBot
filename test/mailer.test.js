@@ -18,15 +18,16 @@ suite('Mailer', function(){
     suite('send', function() {
 
         test('Should call transporter.sendMail', function() {
+            var to = 'whatever@mail.com';
             var subject = 'New add';
             var htmlBody = '<b>New add found</b>';
             var mailOptions = {
                 from: settings.mail.from,
-                to: settings.mail.to,
+                to: to,
                 subject: subject,
                 html: htmlBody
             };
-            sut.send(subject, htmlBody);
+            sut.send(to, subject, htmlBody);
             assert(transporterSendStub.calledWithExactly(mailOptions, sinon.match.func));
         });
 

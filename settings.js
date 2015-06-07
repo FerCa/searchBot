@@ -7,8 +7,7 @@ var settings = {
                 pass: 'notificacions'
             }
         },
-        from: 'SearchBot <search@fercaiscoding.com>',
-        to: 'ferca23@gmail.com'
+        from: 'SearchBot <search@fercaiscoding.com>'
     },
     seenAdsExpiration: 15778463, // 6 months
     mongo: {
