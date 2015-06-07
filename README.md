@@ -18,7 +18,8 @@ var searches = [{
     where: [
         { page: 'milanuncios', searchUrl: 'http://www.milanuncios.com/instrumentos-musicales/guitarra-zurdo.htm?desde=400&hasta=2500&dias=1' },
         { page: 'wallapop', searchUrl: 'http://es.wallapop.com/search?kws=guitarra+zurdo&lat=41.387245&lng=2.191056' }
-    ]
+    ],
+    notifyTo: somemail@mail.com
 }];
 ```
 You just need to put an object (a POJO) inside the searches array with this keys:
@@ -27,5 +28,6 @@ You just need to put an object (a POJO) inside the searches array with this keys
 * where: An array of objects declaring the target pages, with the keys:
    *  page: This will be the name of one of the implemented webpages (be sure to write it identically to the name of the directory inside webpages directory (./lib/webpages).
    *  searchUrl: The url of a valid and working search for the choosed page.
+* notifyTo: The target email where searchbot will notify new ads.
 
 Of course you can add as many searches as you want to the searches array to receive email notifications for multiple concepts.
