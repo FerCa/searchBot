@@ -13,7 +13,7 @@ suite('Webpages', function() {
         adsChecker = new AdsChecker();
         adsCheckerAddStub = sinon.stub(adsChecker, 'add');
         QAllStub = sinon.stub(Q, 'all').returns({then: function() {}});
-        sut = new Webpages('a name', adsChecker, Q);
+        sut = new Webpages(adsChecker, Q);
     });
 
     teardown(function() {
@@ -22,8 +22,8 @@ suite('Webpages', function() {
 
     suite('process', function() {
 
-        function exerciceProcess() {
-            sut.process();
+        function exerciceProcess(callback) {
+            sut.process(callback);
         };
 
         function createFakePromiseWithParam(param) {
@@ -57,7 +57,7 @@ suite('Webpages', function() {
         });
 
         suite('Q.All resolves', function() {
-            var adsCheckerNotifyStub;
+            var adsCheckerProcessStub;
 
             setup(function() {
                 var thenStub = {
@@ -66,12 +66,13 @@ suite('Webpages', function() {
                     }
                 };
                 QAllStub.returns(thenStub);
-                adsCheckerNotifyStub = sinon.stub(adsChecker, 'notify');
+                adsCheckerProcessStub = sinon.stub(adsChecker, 'process');
             });
 
-            test('call adsChecker.notify', function() {
-                exerciceProcess();
-                assert(adsCheckerNotifyStub.called);
+            test('call adsChecker.process with provided callback', function() {
+                var callback = function(){};
+                exerciceProcess(callback);
+                sinon.assert.calledWithExactly(adsCheckerProcessStub, callback);
             });
 
         });

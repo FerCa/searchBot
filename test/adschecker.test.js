@@ -1,15 +1,13 @@
 var sinon = require('sinon');
 var assert = require('chai').assert;
-var Mailer = require('../lib/mailer');
 var SeenAds = require('../lib/seenads');
 var Ad = require('../lib/ad');
 var Q = require('q');
 
 
 suite('AdsChecker', function() {
-    var sut, seenAdsAlreadySeenStub, mailerSendStub, QAllStub;
+    var sut, seenAdsAlreadySeenStub, QAllStub;
     var ads, ad0, ad1, ad2, ad3;
-    var name;
 
     setup(function() {
         ad0 = new Ad('title0');
@@ -19,28 +17,25 @@ suite('AdsChecker', function() {
         ads = [ad0, ad1, ad2, ad3];
         var seenAds = new SeenAds();
         seenAdsAlreadySeenStub = sinon.stub(seenAds, 'alreadySeen');
-        var mailer = new Mailer({mail: {nodeMailer: 'fake'}});
-        mailerSendStub = sinon.stub(mailer, 'send');
-        name = 'a name';
         QAllStub = sinon.stub(Q, 'all').returns({then: function() {}});
-        sut = new AdsChecker(name, seenAds, mailer, Q);
+        sut = new AdsChecker(seenAds, Q);
     });
 
     teardown(function() {
        QAllStub.restore();
     });
 
-    suite('notify', function() {
+    suite('process', function() {
 
-        function exerciceNotify() {
-            sut.notify();
+        function exerciceProcess(callback) {
+            sut.process(callback);
         }
 
         test('call Q.All with promises', function() {
 
             sut.promises.push('promise1');
             sut.promises.push('promise2');
-            exerciceNotify();
+            exerciceProcess(function(){});
             sinon.assert.calledWithExactly(QAllStub, sut.promises);
         });
 
@@ -61,14 +56,15 @@ suite('AdsChecker', function() {
                 QAllStub.returns(thenStub);
             });
 
-            test('call mailer send with all not seen add', function() {
-                exerciceNotify();
-                sinon.assert.calledWithExactly(mailerSendStub, 'New adds for ' + name, ad0.getAsHTML() + ad2.getAsHTML() + ad3.getAsHTML());
+            test('call provided callback with all not seen add', function() {
+                var callbackStub = sinon.stub();
+                exerciceProcess(callbackStub);
+                sinon.assert.calledWithExactly(callbackStub, ad0.getAsHTML() + ad2.getAsHTML() + ad3.getAsHTML());
             });
 
             test('empty the promises array', function() {
                 sut.promises = ['promise1', 'promise2', 'promise3'];
-                exerciceNotify();
+                exerciceProcess(function(){});
                 assert.deepEqual([], sut.promises);
             });
 

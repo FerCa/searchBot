@@ -12,7 +12,7 @@ suite('Mailer', function(){
     setup(function() {
         var transporter = nodemailer.createTransport(settings.mail.nodeMailer);
         transporterSendStub = sinon.stub(transporter, 'sendMail');
-        sut = new Mailer(settings, transporter);
+        sut = new Mailer(settings.mail, transporter);
     });
 
     suite('send', function() {
