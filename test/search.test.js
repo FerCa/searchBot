@@ -54,6 +54,13 @@ suite('Search', function() {
             sinon.assert.calledWithExactly(mailerSendStub, notifyTo, 'New adds for ' + name, adsHtml);
         });
 
+        test('When no ads are found should not call mailer.send', function() {
+            adsHtml = '';
+            exerciceProcess();
+            webpagesProcessStub.callArgWith(0, adsHtml);
+            sinon.assert.notCalled(mailerSendStub);
+        });
+
 
 
     });
