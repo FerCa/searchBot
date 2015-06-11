@@ -6,7 +6,7 @@ var Ad = require('../lib/ad');
 
 suite('MilanunciosScraper', function() {
     var sut;
-    var html = fs.readFileSync('./test/milanunciosresult.html', {encoding: 'utf8'});
+    var html = fs.readFileSync('./test/fixtures/milanunciosresult.html', {encoding: 'utf8'});
 
     setup(function() {
         sut = new MilanunciosScraper();

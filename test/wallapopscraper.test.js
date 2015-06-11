@@ -6,7 +6,7 @@ var Ad = require('../lib/ad');
 
 suite('WallapopScraper', function() {
     var sut;
-    var html = fs.readFileSync('./test/wallapopresult.html', {encoding: 'utf8'});
+    var html = fs.readFileSync('./test/fixtures/wallapopresult.html', {encoding: 'utf8'});
 
     setup(function() {
         sut = new WallapopScraper();
