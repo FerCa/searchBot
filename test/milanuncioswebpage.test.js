@@ -4,9 +4,14 @@ var Webpage = require('../lib/webpage');
 var MilanunciosWebpage = require('../lib/webpages/milanuncios/milanuncioswebpage');
 
 suite('MilanunciosWebpage', function() {
-    var sut, webPage, webPageGetAdsStub;
+    var sut, webPage, webPageGetAdsStub, resolvedSpy, errorSpy;
+    var ads, error;
 
     setup(function() {
+        ads = 'ads';
+        error = 'error';
+        resolvedSpy = sinon.spy();
+        errorSpy = sinon.spy();
         var webpage = new Webpage();
         webPageGetAdsStub = sinon.stub(webpage, 'getAds');
         sut = new MilanunciosWebpage('searchurl', webpage);
@@ -32,12 +37,16 @@ suite('MilanunciosWebpage', function() {
             assert(webPageGetAdsStub.called);
         });
 
-        test('when webPage.getAds calls provided callback should resolve the promise', function() {
-            var ads = 'ads';
-            webPageGetAdsStub.callsArgWith(0, ads);
-            var resolvedSpy = sinon.spy();
+        test('when webPage.getAds calls provided callback without error should resolve the promise', function() {
+            webPageGetAdsStub.callsArgWith(0, null, ads);
             exerciceGetAds().then(resolvedSpy);
             sinon.assert.calledWithExactly(resolvedSpy, ads);
+        });
+
+        test('when webPage.getAds calls provided callback with error should reject the promise', function() {
+            webPageGetAdsStub.callsArgWith(0, error, ads);
+            exerciceGetAds().then(resolvedSpy, errorSpy);
+            sinon.assert.calledWithExactly(errorSpy, error);
         });
 
     });

@@ -44,15 +44,32 @@ suite('Webpage', function() {
 
         test('If error requesting url should print error to the console', function() {
             requestStub.callsArgWith(1, 'error');
-            exerciceGetAds();
+            exerciceGetAds(function() {});
             sinon.assert.calledWithExactly(log2OutErrorStub, 'Error requesting: ' + searchUrl);
         });
 
         test('If http error returned when requesting url should print error to the console', function() {
             var fakeResponse = createFakeResponseWithStatusCode(500);
             requestStub.callsArgWith(1, undefined, fakeResponse);
-            exerciceGetAds();
+            exerciceGetAds(function() {});
             sinon.assert.calledWithExactly(log2OutErrorStub, 'Error requesting: ' + searchUrl);
+        });
+
+        test('If http error returned when requesting url should call callback with error', function() {
+            var statusCode500 = 500;
+            var fakeResponse = createFakeResponseWithStatusCode(statusCode500);
+            requestStub.callsArgWith(1, undefined, fakeResponse);
+            var callbackSpy = sinon.spy();
+            exerciceGetAds(callbackSpy);
+            sinon.assert.calledWithExactly(callbackSpy, new Error('Status code ' + statusCode500 + ' returned'));
+        });
+
+        test('If library error returned when requesting url should call callback with the same error', function() {
+            var error = 'library error';
+            requestStub.callsArgWith(1, error);
+            var callbackSpy = sinon.spy();
+            exerciceGetAds(callbackSpy);
+            sinon.assert.calledWithExactly(callbackSpy, error);
         });
 
         test('If http response is 200 should call provided scraper extractAds with response body', function() {
