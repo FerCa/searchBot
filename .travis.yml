@@ -1,3 +1,5 @@
 language: node_js
 sudo: required
 before_install: npm install -g mocha
+script:
+  - bash run_integration_tests.sh
