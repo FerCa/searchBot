@@ -29,6 +29,8 @@ suite('SeenAds', function() {
         log2OutErrorStub = sinon.stub(logger, 'error');
 
         sut = new SeenAds(settings, adModel, logger);
+
+        sinon.stub(sut, '_disconnectAfterTimeout');
     });
 
     teardown(function() {
