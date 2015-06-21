@@ -31,9 +31,15 @@ suite('Webpage', function() {
             };
         }
 
-        test('Should call request with correct url', function() {
+        test('Should call request with correct url and headers', function() {
             exerciceGetAds();
-            assert(requestStub.calledWithExactly(searchUrl, sinon.match.func));
+            var expectedOptions = {
+                url: searchUrl,
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.124 Safari/537.36'
+                }
+            };
+            assert(requestStub.calledWithExactly(expectedOptions, sinon.match.func));
         });
 
         test('If error requesting url should print error to the console', function() {
