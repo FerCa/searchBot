@@ -1,6 +1,7 @@
 language: node_js
 sudo: required
-before_install: npm install -g mocha
+before_install: npm install -g mocha istanbul
 script:
   - bash run_unit_tests.sh
   - bash run_integration_tests.sh
+  - bash istanbul cover _mocha -- -R spec --ui tdd && cat ./coverage/lcov.info | ./node_modules/.bin/codecov

@@ -5,6 +5,7 @@
   "main": "searchbot.js",
   "dependencies": {
     "cheerio": "^0.19.0",
+    "codecov.io": "^0.1.4",
     "iconv-lite": "^0.4.7",
     "log2out": "0.0.6",
     "mongoose": "^4.0.2",
