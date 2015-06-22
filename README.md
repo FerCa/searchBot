@@ -1,5 +1,7 @@
+# searchBot - Client side saved searches
+
 [![Build Status](https://travis-ci.org/FerCa/searchBot.svg?branch=master)](https://travis-ci.org/FerCa/searchBot)
-# searchBot
+[![codecov.io](http://codecov.io/github/FerCa/searchBot/coverage.svg?branch=master)](http://codecov.io/github/FerCa/searchBot?branch=master)
 
 searchBot is a command line tool to save searches to e-comerce, online thrift shops or any other webpage providing 
 searches for products and receive emails every time a new product matches the search.
