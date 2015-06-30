@@ -8,11 +8,14 @@ RUN yum update -y && \
  mongodb-server \
  mongodb \
  npm \
- crontabs && \
+ crontabs \
+ supervisor && \
  crontab /etc/crontab && \
  mkdir -p /data/db
 
-ENTRYPOINT "/usr/bin/mongod"
+ COPY ./supervisor.conf /etc/supervisord.conf
+
+ENTRYPOINT "/usr/bin/supervisord"
 
 ENV InstallationDir /var/searchBot/
 
