@@ -46,6 +46,8 @@ Of course you can add as many searches as you want to the searches array to rece
 
 ## Install and run searchBot easily with docker
 
+[![Docker](http://dockeri.co/image/ferca/searchbot)](https://registry.hub.docker.com/u/ferca/searchbot/)
+
 Searchbot requires mongodb, node, npm and a job scheduler to run it periodically. Instead of installing all this in your machine 
 you can use the searchbot docker image to install and run it in any platform in a much more easier way.
 
