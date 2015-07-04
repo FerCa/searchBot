@@ -38,7 +38,7 @@ You just need to put an object (a POJO) inside the searches array with this keys
 
 * name: A name for this search (this will be in the subject of the email you will receive for new ads).
 * where: An array of objects declaring the target pages, with the keys:
-   *  page: This will be the name of one of the implemented webpages (be sure to write it identically to the name of the directory inside webpages directory (./lib/webpages).
+   *  page: This should be the name of one of the implemented scrapers. Be sure to write it identically to the prefix of the scraper file inside scrapers directory (./lib/scrapers).
    *  searchUrl: The url of a valid and working search for the chosen page.
 * notifyTo: The target email where searchbot will notify new ads.
 

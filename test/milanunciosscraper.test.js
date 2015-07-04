@@ -1,6 +1,6 @@
 var sinon = require('sinon');
 var assert = require('chai').assert;
-var MilanunciosScraper = require('../lib/webpages/milanuncios/milanunciosscraper');
+var MilanunciosScraper = require('../lib/scrapers/milanunciosscraper');
 var fs = require('fs');
 var Ad = require('../lib/ad');
 

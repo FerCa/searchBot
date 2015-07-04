@@ -3,8 +3,9 @@ var assert = require('chai').assert;
 var Search = require('../lib/search');
 var Webpages = require('../lib/webpages');
 var Mailer = require('../lib/mailer');
-var MilanunciosWebpage = require('../lib/webpages/milanuncios/milanuncioswebpage');
-var WallapopWebpage = require('../lib/webpages/wallapop/wallapopwebpage');
+var MilanunciosScraper = require('../lib/scrapers/milanunciosscraper');
+var WallapopScraper = require('../lib/scrapers/wallapopscraper');
+var Webpage = require('../lib/webpage');
 
 suite('Search', function() {
     var sut, searchPojo, name, notifyTo;
@@ -38,8 +39,8 @@ suite('Search', function() {
 
         test('Should add to webpages a webpages implementation instance for every provided where', function() {
             exerciceProcess();
-            assert.isTrue(webpagesAddStub.getCall(0).args[0] instanceof MilanunciosWebpage);
-            assert.isTrue(webpagesAddStub.getCall(1).args[0] instanceof WallapopWebpage);
+            assert.isTrue(webpagesAddStub.getCall(0).args[0] instanceof Webpage);
+            assert.isTrue(webpagesAddStub.getCall(1).args[0] instanceof Webpage);
         });
 
         test('Should call webpages.process', function() {

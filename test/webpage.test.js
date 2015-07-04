@@ -2,7 +2,7 @@ var sinon = require('sinon');
 var assert = require('chai').assert;
 var Webpage = require('../lib/webpage');
 var log2out = require('log2out');
-var MilanunciosScraper = require('../lib/webpages/milanuncios/milanunciosscraper');
+var MilanunciosScraper = require('../lib/scrapers/milanunciosscraper');
 
 suite('Webpage', function() {
     var sut, requestStub, log2OutErrorStub, scraperExtractAdsStub;
@@ -21,8 +21,17 @@ suite('Webpage', function() {
 
     suite('getAds', function() {
 
-        function exerciceGetAds(callback) {
-            sut.getAds(callback);
+        setup(function() {
+            // changing nextTick behaviour to make the promise syncronous
+            sinon.stub(process, 'nextTick').yields();
+        });
+
+        teardown(function() {
+            process.nextTick.restore();
+        });
+
+        function exerciceGetAds() {
+            return sut.getAds();
         }
 
         function createFakeResponseWithStatusCode(statusCode) {
@@ -44,14 +53,14 @@ suite('Webpage', function() {
 
         test('If error requesting url should print error to the console', function() {
             requestStub.callsArgWith(1, 'error');
-            exerciceGetAds(function() {});
+            exerciceGetAds();
             sinon.assert.calledWithExactly(log2OutErrorStub, 'Error requesting: ' + searchUrl);
         });
 
         test('If http error returned when requesting url should print error to the console', function() {
             var fakeResponse = createFakeResponseWithStatusCode(500);
             requestStub.callsArgWith(1, undefined, fakeResponse);
-            exerciceGetAds(function() {});
+            exerciceGetAds();
             sinon.assert.calledWithExactly(log2OutErrorStub, 'Error requesting: ' + searchUrl);
         });
 
@@ -59,24 +68,24 @@ suite('Webpage', function() {
             var statusCode500 = 500;
             var fakeResponse = createFakeResponseWithStatusCode(statusCode500);
             requestStub.callsArgWith(1, undefined, fakeResponse);
-            var callbackSpy = sinon.spy();
-            exerciceGetAds(callbackSpy);
-            sinon.assert.calledWithExactly(callbackSpy, new Error('Status code ' + statusCode500 + ' returned'));
+            var errorSpy = sinon.spy();
+            exerciceGetAds().then(function(){}, errorSpy);
+            sinon.assert.calledWithExactly(errorSpy, new Error('Status code ' + statusCode500 + ' returned'));
         });
 
         test('If library error returned when requesting url should call callback with the same error', function() {
             var error = 'library error';
             requestStub.callsArgWith(1, error);
-            var callbackSpy = sinon.spy();
-            exerciceGetAds(callbackSpy);
-            sinon.assert.calledWithExactly(callbackSpy, error);
+            var errorSpy = sinon.spy();
+            exerciceGetAds().then(function(){}, errorSpy);
+            sinon.assert.calledWithExactly(errorSpy, error);
         });
 
         test('If http response is 200 should call provided scraper extractAds with response body', function() {
             var fakeResponse = createFakeResponseWithStatusCode(200);
             var body = 'testHtmlBody';
             requestStub.callsArgWith(1, undefined, fakeResponse, body);
-            exerciceGetAds(function(){});
+            exerciceGetAds();
             sinon.assert.calledWithExactly(scraperExtractAdsStub, body);
         });
 
@@ -85,9 +94,9 @@ suite('Webpage', function() {
             requestStub.callsArgWith(1, undefined, fakeResponse, 'body');
             var expectedAds = 'arrayOfAds';
             scraperExtractAdsStub.returns(expectedAds);
-            var callbackSpy = sinon.spy();
-            exerciceGetAds(callbackSpy);
-            callbackSpy.calledWithExactly(expectedAds);
+            var successSpy = sinon.spy();
+            exerciceGetAds().then(successSpy, function(){});
+            successSpy.calledWithExactly(expectedAds);
         });
 
     });
