@@ -52,7 +52,7 @@ suite('Search', function() {
             adsHtml = 'adsHtml';
             exerciceProcess();
             webpagesProcessStub.callArgWith(0, adsHtml);
-            sinon.assert.calledWithExactly(mailerSendStub, notifyTo, 'New adds for ' + name, adsHtml);
+            sinon.assert.calledWithExactly(mailerSendStub, notifyTo, 'New ads for ' + name, adsHtml);
         });
 
         test('When no ads are found should not call mailer.send', function() {
