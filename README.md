@@ -76,3 +76,15 @@ editing the searches.js file in your local machine and the changes will take efe
 With Docker you will be able to see the container logs, execute a bash interactive session inside de container, get a new version
 of searchBot (downloading the latest image).  I encourage you to read the [docker documentation](https://docs.docker.com/) and get familiar with the concepts 
 and tools. It's an awesome tool!
+
+## Implementing a new scraper
+
+Implementing a new scraper is really easy. You just need to create a new scraper class inside the "scarpers" directory.
+ 
+Your class should expose a method called "extractAds". This method will receive a string with the HTML code of the configured 
+search and should return an array of ad objects (lib/ad.js).
+
+And that's all!
+
+Also you can create a integration test inside the "integration_test" folder, you can use it to help you develop your scraper
+and after, this will ensure that your scraper keeps working and realize if the scraped page changes.
