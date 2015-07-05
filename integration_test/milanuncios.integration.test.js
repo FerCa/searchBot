@@ -3,6 +3,7 @@ var Webpage = require('../lib/webpage');
 var WebpagesTestHelpers = require('./testhelpers/webpagestesthelpers');
 
 suite('Milanuncios Integration Test', function() {
+    this.timeout(10000);
     var sut, webpagesTestHelpers;
 
     setup(function() {
